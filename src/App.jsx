@@ -36,9 +36,17 @@ function App() {
     return format(local, "HH:mm:ss");
   };
 
-  const futureDate = new Date(\`\${future.year}-\${future.month}-\${future.day}T\${future.hour}:\${future.minute}:00\`);
+  const futureDate = new Date(
+    future.year + "-" +
+    future.month + "-" +
+    future.day + "T" +
+    future.hour + ":" +
+    future.minute + ":00"
+  );
+
   const baseDate = new Date(new Date().toLocaleString("en-US", { timeZone: timezones[future.base] }));
   const diff = futureDate.getTime() - baseDate.getTime();
+
   const futureTimes = {};
   for (const key in timezones) {
     const local = new Date(new Date().toLocaleString("en-US", { timeZone: timezones[key] }));
