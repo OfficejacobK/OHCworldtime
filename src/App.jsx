@@ -9,10 +9,10 @@ const timezones = {
 };
 
 const labels = {
-  seoul: "서울",
-  almaty: "알마티",
-  la: "로스엔젤레스",
-  hanoi: "하노이"
+  seoul: "HQ (Seoul, Korea)",
+  almaty: "OHKZ (Almaty, Kazakhstan)",
+  la: "OHUS (LA, USA)",
+  hanoi: "OHVN (Hanoi, Vietnam)"
 };
 
 function App() {
@@ -62,24 +62,24 @@ function App() {
 
   return (
     <div className="bg-black text-orange-400 min-h-screen flex flex-col items-center justify-center font-digital p-8">
-      <h1 className="text-4xl lg:text-5xl font-bold mb-12 text-center">OPEN HEALTHCARE 국가별 시간 현황</h1>
+      <img src="/logo.png" alt="Open Healthcare" className="h-16 mb-4" />
+      <h1 className="text-4xl lg:text-5xl font-bold mb-12 text-center">World Clock Dashboard</h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-10 text-center mb-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 text-center mb-16">
         {Object.keys(timezones).map((key) => (
           <div key={key}>
             <div className="text-xl mb-2">{labels[key]}</div>
-            <div className="text-4xl md:text-5xl font-mono">{getFormattedTime(timezones[key])}</div>
+            <div className="text-5xl md:text-6xl font-mono">{getFormattedTime(timezones[key])}</div>
           </div>
         ))}
       </div>
 
-      <div className="text-2xl mb-4">국가별 시간 검토</div>
+      <div className="text-2xl mb-4">Global Time Checker</div>
       <div className="flex flex-wrap gap-2 justify-center items-center mb-8">
         <select className="bg-black border border-orange-400 p-2 text-orange-400" value={future.base} onChange={e => handleChange("base", e.target.value)}>
-          <option value="seoul">서울 기준</option>
-          <option value="almaty">알마티 기준</option>
-          <option value="la">로스엔젤레스 기준</option>
-          <option value="hanoi">하노이 기준</option>
+          {Object.keys(labels).map(key => (
+            <option key={key} value={key}>{labels[key]}</option>
+          ))}
         </select>
         <select className="bg-black border border-orange-400 p-2 text-orange-400" value={future.year} onChange={e => handleChange("year", e.target.value)}>
           {genRange(2023, 2030).map((y) => <option key={y} value={y}>{y}</option>)}
@@ -98,7 +98,7 @@ function App() {
         </select>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center text-xl">
         {Object.keys(futureTimes).map((key) => (
           <div key={key}>
             <div>{labels[key]}</div>
