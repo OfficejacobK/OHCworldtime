@@ -36,18 +36,29 @@ function App() {
     return format(local, "HH:mm:ss");
   };
 
-  const futureDate = new Date(
-    future.year + "-" + future.month + "-" + future.day + "T" + future.hour + ":" + future.minute + ":00"
-  );
+  const getFutureDate = () => {
+    try {
+      return new Date(future.year + "-" + future.month + "-" + future.day + "T" + future.hour + ":" + future.minute + ":00");
+    } catch {
+      return new Date();
+    }
+  };
+
+  const futureDate = getFutureDate();
   const baseDate = new Date(new Date().toLocaleString("en-US", { timeZone: timezones[future.base] }));
   const diff = futureDate.getTime() - baseDate.getTime();
+
   const futureTimes = {};
   for (const key in timezones) {
     const local = new Date(new Date().toLocaleString("en-US", { timeZone: timezones[key] }));
     futureTimes[key] = format(new Date(local.getTime() + diff), "yyyy-MM-dd HH:mm");
   }
 
-  const handleChange = (field, value) => setFuture(prev => ({ ...prev, [field]: value }));
+  const handleChange = (field, value) => {
+    setFuture(prev => ({ ...prev, [field]: value }));
+  };
+
+  const genRange = (start, end) => Array.from({ length: end - start + 1 }, (_, i) => String(i + start).padStart(2, "0"));
 
   return (
     <div className="bg-black text-orange-400 min-h-screen flex flex-col items-center justify-center font-digital p-8">
@@ -62,7 +73,7 @@ function App() {
         ))}
       </div>
 
-      <div className="text-2xl mb-4">미래 시간 예측</div>
+      <div className="text-2xl mb-4">국가별 시간 검토</div>
       <div className="flex flex-wrap gap-2 justify-center items-center mb-8">
         <select className="bg-black border border-orange-400 p-2 text-orange-400" value={future.base} onChange={e => handleChange("base", e.target.value)}>
           <option value="seoul">서울 기준</option>
@@ -70,9 +81,21 @@ function App() {
           <option value="la">로스엔젤레스 기준</option>
           <option value="hanoi">하노이 기준</option>
         </select>
-        {["year", "month", "day", "hour", "minute"].map((f, i) => (
-          <input key={f} type="number" className="bg-black border border-orange-400 p-2 w-20 text-center text-orange-400" value={future[f]} onChange={e => handleChange(f, e.target.value)} />
-        ))}
+        <select className="bg-black border border-orange-400 p-2 text-orange-400" value={future.year} onChange={e => handleChange("year", e.target.value)}>
+          {genRange(2023, 2030).map((y) => <option key={y} value={y}>{y}</option>)}
+        </select>
+        <select className="bg-black border border-orange-400 p-2 text-orange-400" value={future.month} onChange={e => handleChange("month", e.target.value)}>
+          {genRange(1, 12).map((m) => <option key={m} value={m}>{m}</option>)}
+        </select>
+        <select className="bg-black border border-orange-400 p-2 text-orange-400" value={future.day} onChange={e => handleChange("day", e.target.value)}>
+          {genRange(1, 31).map((d) => <option key={d} value={d}>{d}</option>)}
+        </select>
+        <select className="bg-black border border-orange-400 p-2 text-orange-400" value={future.hour} onChange={e => handleChange("hour", e.target.value)}>
+          {genRange(0, 23).map((h) => <option key={h} value={h}>{h}</option>)}
+        </select>
+        <select className="bg-black border border-orange-400 p-2 text-orange-400" value={future.minute} onChange={e => handleChange("minute", e.target.value)}>
+          {genRange(0, 59).map((m) => <option key={m} value={m}>{m}</option>)}
+        </select>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-xl">
